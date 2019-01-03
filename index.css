@@ -48,6 +48,7 @@
    height:5px;
    border-radius: 5px;
    top:-1px;
+
  }
  #scalePointer{
    cursor: pointer;
@@ -64,9 +65,10 @@
    text-decoration: underline;
  }
  #cropPackage,#eraserPackage,#scaleRangePackage{
+   position: relative;
    display: inline-block;
  }
- #crop,#eraser,#resetButton{
+ #crop,#eraser,#resetButton,#downloadButton{
    margin-left: 20px;
    width:40px;
    background-color:#0080FF;
@@ -76,7 +78,8 @@
  a{
    color:white;
  }
- #crop:hover,#eraser:hover,#resetButton:hover{
+ #crop:hover,#eraser:hover,#resetButton:hover,
+ #downloadButton:hover{
    cursor: pointer;
    color:#FF66FF;
    background-color: #4DC3FF;
@@ -98,18 +101,28 @@
  }
 #cropTools,#eraserTools{
   display: none;
+  position: absolute;
+  left:23px;
+  top:25px;
+  margin-top:-4px;
 }
 .cropButton,.eraserControls{
   text-align: center;
-  display: inline-block;
-  width:60px;
-  border-bottom: 2px solid #FF99FF;
-  padding-bottom: 2px;
+  width:49px;
+  border: 2px solid #FF99FF;
+  border-top: none;
+  padding-bottom: 3px;
+  padding-top: 3px;
   margin-left: -3px;
   opacity: 0.3;
+  font-size: 14px;
+}
+.eraserControls{
+  width: 58px;
 }
 .eraserActive{
   opacity: 1;
+  background-color:#FFCCFF;
 }
 .cropButton:hover,.eraserControls:hover{
   border-bottom: 2px solid #FF66FF;
@@ -128,18 +141,27 @@
   left:50%
 }
 
-@media screen and (max-width:700px) {
+@media screen and (max-width:580px) {
 
-  #cropPackage,#eraserPackage,#scaleRangePackage{
+  #scaleRangePackage{
     display: block;
-    padding-top:20px;
+    text-align: center;
   }
-  #eraser,#crop,#resetButton{
-    margin-left: 0px;
+  #buttons{
+    text-align: center;
   }
-  #resetButton{
+
+  #cropPackage,#eraserPackage,#resetButton,#downloadButton{
     display: block;
-    margin-top: 17px;
+    margin-top: 15px;
+    float:left
+  }
+  #resetButton,#downloadButton{
+    margin-top: 12px;
     width:50px;
   }
+  #downloadButton{
+    width: 80px;
+  }
 }
+
