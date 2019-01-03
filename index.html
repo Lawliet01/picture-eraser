@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>MattingHead</title>
+    <title>Picture-eraser</title>
     <link rel="stylesheet" href="index.css"/>
   </head>
   <body>
@@ -18,12 +18,11 @@
       </div><br>
       <div id="toolKit">
            <div id="scaleRangePackage">
-
-           </div>
           - <div id="scaleRange">
               <div id="scalePointer"></div>
             </div> +
             <span id="scalePrecentage">100%</span>
+            </div>
             <div id="cropPackage">
               <a id="crop" onclick="changeToMode(`crop`)">crop</a>
               <div id="cropTools">
@@ -41,7 +40,7 @@
               </div>
             </div>
             <a id="resetButton" onclick="reset()">reset</a>
-
+            <a id="downloadButton" onclick="downloadImage()">download</a>
 
       </div>
 
@@ -50,3 +49,4 @@
   </body>
   <script src="main.js"></script>
 </html>
+
