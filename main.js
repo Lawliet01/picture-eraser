@@ -10,6 +10,7 @@ let eraserButton = document.querySelector("#eraser")
 let toolKit = document.querySelector("#toolKit")
 let eraserControls = Array.from(document.getElementsByClassName("eraserControls"));
 let eraserPointer = document.querySelector("#eraserPointer")
+let downloadButton = document.querySelector("#downloadButton")
 let delay = null;
 let x_CanvasDiff = 0;//canvas和鼠标之间在x轴方向上的差
 let y_CanvasDiff = 0;//canvas和鼠标之间在y轴方向上的差
@@ -60,7 +61,6 @@ function picSelector(){
           state.context.drawImage(img,0,0)
           state.originalData = state.context.getImageData(0,0,state.width,state.height);
           state.currentData = state.context.getImageData(0,0,state.width,state.height);
-          console.log(state)
         })
       })
       reader.readAsDataURL(input.files[0])
@@ -108,7 +108,7 @@ function eraseCanvas(event){
     let radius = Math.round((right - left)/2);
     //获得像素点的结构数组。
     //因为橡皮擦是圆形，为了使得擦出的是圆形，就要知道在这个圆里每一行要擦掉多少个像素。
-    //这个函数利用沟股定理，获得1/4圆部分
+    //这个函数利用勾股定理，获得1/4圆部分
     function halfCirclePixelsGroup(radius){
       let row = [];
       for (let i = 0;i<radius;i++){
@@ -155,7 +155,7 @@ function eraseCanvas(event){
       state.currentData.data[removingPixels[i]*4] = 255;
       state.currentData.data[removingPixels[i]*4+1] = 255;
       state.currentData.data[removingPixels[i]*4+2] = 255;
-      state.currentData.data[removingPixels[i]*4+3] = 255;
+      state.currentData.data[removingPixels[i]*4+3] = 0;
     }
     state.context.clearRect(0,0,state.width,state.height)
     state.context.putImageData(state.currentData,0,0)
@@ -232,7 +232,7 @@ function cropCut(){
       state.currentData.data[4*i] = 255;
       state.currentData.data[4*i+1] = 255;
       state.currentData.data[4*i+2] = 255;
-      state.currentData.data[4*i+3] = 255;
+      state.currentData.data[4*i+3] = 0;
     }
   }
   state.context.clearRect(0,0,state.width,state.height)
@@ -333,7 +333,6 @@ function changeToMode(mode){
     }
     eraserButton.classList.add("stateActiveForBtn");
     eraserButton.nextElementSibling.style.display = "inline-block";
-
   }
 }
 
@@ -342,4 +341,12 @@ function eraserResize(n){
   eraserControls[n].classList.add("eraserActive")
   eraserPointer.style.width = (n+1)*10 + "px";
   eraserPointer.style.height = (n+1)*10 + "px";
+}
+
+function downloadImage(){
+  let link = document.createElement("a");
+  link.setAttribute("href",imgCanvas.toDataURL())
+  link.setAttribute("download","picture.png")
+  link.click();
+  link.remove()
 }
