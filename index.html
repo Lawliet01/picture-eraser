@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>MattingHead</title>
+    <link rel="stylesheet" href="index.css"/>
+  </head>
+  <body>
+    <div id="mattingHead-container">
+      <div id="pictureFrame">
+        <div id="dashFrame">
+          <a id="picInputButton" onclick="picSelector()">点击选择图片</a>
+        </div>
+        <canvas id="imgCanvas"></canvas>
+        <div id="cropFrame"></div>
+        <div id="eraserPointer"></div>
+
+      </div><br>
+      <div id="toolKit">
+           <div id="scaleRangePackage">
+
+           </div>
+          - <div id="scaleRange">
+              <div id="scalePointer"></div>
+            </div> +
+            <span id="scalePrecentage">100%</span>
+            <div id="cropPackage">
+              <a id="crop" onclick="changeToMode(`crop`)">crop</a>
+              <div id="cropTools">
+                <div class="cropButton" onclick="cropCut()">cut</div>
+                <div class="cropButton" onclick="cropFrame.style.display=`none`">cancel</div>
+              </div>
+            </div>
+            <div id="eraserPackage">
+              <a id="eraser" onclick="changeToMode(`eraser`)">eraser</a>
+              <div id="eraserTools">
+                <div class="eraserControls" onclick="eraserResize(0)">small</div>
+                <div class="eraserControls" onclick="eraserResize(1)">middle</div>
+                <div class="eraserControls" onclick="eraserResize(2)">big</div>
+                <div class="eraserControls" onclick="changeToMode(`ordinary`)">done</div>
+              </div>
+            </div>
+            <a id="resetButton" onclick="reset()">reset</a>
+
+
+      </div>
+
+
+    </div><br>
+  </body>
+  <script src="main.js"></script>
+</html>

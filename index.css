@@ -1,0 +1,145 @@
+*{box-sizing: border-box;}
+ #mattingHead-container{
+   text-align: center;
+ }
+ #pictureFrame{
+   position: relative;
+   border: 2px solid #E6EEFF;
+   margin: auto;
+   box-sizing: border-box;
+   max-width:700px;
+   height:400px;
+   overflow: hidden;
+ }
+ #dashFrame{
+   border:2px dashed #E6EEFF;
+   margin: 20px;
+   padding:165px 0px;
+ }
+ #imgCanvas{
+   position: absolute;
+   display: none;
+ }
+ #imgCanvas:hover{
+   cursor: grab;
+ }
+ #picInputButton{
+   color:white;
+   padding: 10px 20px;
+   border-radius: 10px;
+   background-color: #0080FF;
+ }
+ #picInputButton:hover{
+    cursor: pointer;
+    background-color: #80EAFF
+ }
+ #toolKit{
+   display: none;
+   max-width: 700px;
+   margin: auto;
+   text-align: left;
+ }
+ #scaleRange{
+   position: relative;
+   display: inline-block;
+   background-color: #CCF7FF;
+   border:1px solid #4DC3FF;
+   width:150px;
+   height:5px;
+   border-radius: 5px;
+   top:-1px;
+ }
+ #scalePointer{
+   cursor: pointer;
+   position: absolute;
+   display: inline-block;
+   background-color: #0080FF;
+   border-radius: 50%;
+   width: 10px;
+   height: 10px;
+   top:-3px;
+   left:50px;
+ }
+ #scalePrecentage{
+   text-decoration: underline;
+ }
+ #cropPackage,#eraserPackage,#scaleRangePackage{
+   display: inline-block;
+ }
+ #crop,#eraser,#resetButton{
+   margin-left: 20px;
+   width:40px;
+   background-color:#0080FF;
+   border-radius: 5px;
+   padding: 3px 10px;
+ }
+ a{
+   color:white;
+ }
+ #crop:hover,#eraser:hover,#resetButton:hover{
+   cursor: pointer;
+   color:#FF66FF;
+   background-color: #4DC3FF;
+ }
+ .stateActiveForBtn{
+   border-bottom: 2px solid #FF66FF;
+   color:#FF66FF;
+ }
+ #cropFrame{
+   display: none;
+   position: absolute;
+   border:2px dashed black;
+   width:0px;
+   height:0px;
+ }
+ #cropFrame:hover{
+   cursor: grab;
+   border: 3px dashed red;
+ }
+#cropTools,#eraserTools{
+  display: none;
+}
+.cropButton,.eraserControls{
+  text-align: center;
+  display: inline-block;
+  width:60px;
+  border-bottom: 2px solid #FF99FF;
+  padding-bottom: 2px;
+  margin-left: -3px;
+  opacity: 0.3;
+}
+.eraserActive{
+  opacity: 1;
+}
+.cropButton:hover,.eraserControls:hover{
+  border-bottom: 2px solid #FF66FF;
+  cursor: pointer;
+  opacity: 1;
+}
+
+#eraserPointer{
+  display: none;
+  position: absolute;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  top:50%;
+  left:50%
+}
+
+@media screen and (max-width:700px) {
+
+  #cropPackage,#eraserPackage,#scaleRangePackage{
+    display: block;
+    padding-top:20px;
+  }
+  #eraser,#crop,#resetButton{
+    margin-left: 0px;
+  }
+  #resetButton{
+    display: block;
+    margin-top: 17px;
+    width:50px;
+  }
+}
