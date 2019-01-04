@@ -34,7 +34,7 @@
     background-color: #80EAFF
  }
  #toolKit{
-   /*display: none;*/
+   display: none;
    max-width: 700px;
    margin: auto;
    text-align: left;
@@ -69,10 +69,12 @@
    display: inline-block;
  }
  #mouseButton,#crop,#eraser,#undoButton,#resetButton,#downloadButton{
+   position: relative;
    margin-left: 5px;
    background-color:#0080FF;
    border-radius: 5px;
    padding: 3px 8px;
+   z-index: 2;
  }
  a{
    color:white;
@@ -105,7 +107,7 @@
   top:25px;
   margin-top:-4px;
   transition: 0.2s;
-  z-index: -1;
+  z-index: 1;
 }
 .cropButton,.eraserControls{
   text-align: center;
