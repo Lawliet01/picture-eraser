@@ -24,6 +24,7 @@ let state = Object.create(null);
 state["context"] = imgCanvas.getContext("2d")
 state.scale = 1;
 state.mode = "ordinary"
+state.history = [];
 let imgCanvasSize = imgCanvas.getBoundingClientRect();
 let pictureFrameSize = pictureFrame.getBoundingClientRect();
 //导入图片，结果保存在state里
@@ -69,6 +70,7 @@ function picSelector(){
   input.click()
   input.remove()
 }
+
 //根据不同的mode,产生鼠标移动不同的效果。
 imgCanvas.addEventListener("mousedown",event=>{
   imgCanvasSize = imgCanvas.getBoundingClientRect();
@@ -79,8 +81,10 @@ imgCanvas.addEventListener("mousedown",event=>{
   x_PicFrameDiff = Math.round(event.clientX - pictureFrameSize.left)
   y_PicFrameDiff = Math.round(event.clientY -pictureFrameSize.top)
   if (state.mode == "eraser"){
+    addHistory()
     eraseCanvas(event);
     imgCanvas.addEventListener("mousemove",eraseCanvas)
+    pictureFrame.addEventListener("mousemove",eraseCanvas)
   }else if (state.mode == "crop"){
     cropFrame.style.display = "block";
     cropFrame.style.top = y_PicFrameDiff - 3 + "px";//3为点击时候的调整
@@ -94,13 +98,24 @@ imgCanvas.addEventListener("mousedown",event=>{
     pictureFrame.addEventListener("mousemove",drag)
   }
 })
+//不给pictureFrame加eraser的效果，会导致边框无法擦拭。
+pictureFrame.addEventListener("mousedown",event=>{
+  if (state.mode == "eraser"){
+    addHistory()
+    eraseCanvas(event);
+    imgCanvas.addEventListener("mousemove",eraseCanvas)
+    pictureFrame.addEventListener("mousemove",eraseCanvas)
+  }
+})
 //橡皮擦功能
 function eraseCanvas(event){
   if (event.buttons == 0){
     imgCanvas.removeEventListener("mousemove",eraseCanvas)
+    pictureFrame.removeEventListener("mousemove",eraseCanvas)
   }else{
     let eraserPointerSize = eraserPointer.getBoundingClientRect()
     imgCanvasSize = imgCanvas.getBoundingClientRect();
+    //获得橡皮擦的位置
     let left = Math.round((eraserPointerSize.left - imgCanvasSize.left)/state.scale)
     let right = Math.round((eraserPointerSize.right - imgCanvasSize.left)/state.scale)
     let top = Math.round((eraserPointerSize.top - imgCanvasSize.top)/state.scale)
@@ -108,7 +123,7 @@ function eraseCanvas(event){
     let radius = Math.round((right - left)/2);
     //获得像素点的结构数组。
     //因为橡皮擦是圆形，为了使得擦出的是圆形，就要知道在这个圆里每一行要擦掉多少个像素。
-    //这个函数利用勾股定理，获得1/4圆部分
+    //这个函数利用勾股定理，获得1/4圆部分每行要擦拭多少像素
     function halfCirclePixelsGroup(radius){
       let row = [];
       for (let i = 0;i<radius;i++){
@@ -119,17 +134,19 @@ function eraseCanvas(event){
       }
       return row;
     }
-    //根据位置与canvasX、Y方向上的差距算出像素点。
+    //根据位置与canvasX、Y方向上的差距算出像素点在数组里的位置。
     function pixelsToPosition(widthDiff,heightDiff){
+      if (widthDiff>state.width-1||widthDiff<0||heightDiff>state.height||heightDiff<0) return null;
       return state.width*heightDiff+widthDiff;
     }
     //找到圆心的位置（widthDiff，heightDiff）
-    //-1 为误差调整
+    //-1 为误差调整，否则擦出来的形状会稍稍偏离
     let widthDiff = Math.round((right+left)/2) - 1;
     let heightDiff = Math.round((bottom+top)/2) - 1;
-    let removingPixels = [];
+    let removingPixels = [];//所有要擦的点的位置的集合
     let pixelsGroup = halfCirclePixelsGroup(radius)
     //获得要擦掉的像素位置的数组。
+    //每一行同时往左右获得像素点，完成后再往上下获得像素点
     for (let i = 0;i<pixelsGroup.length;i++){
       for (let k = 0;k<pixelsGroup[i];k++){
         let _widthDiff = widthDiff;
@@ -144,6 +161,7 @@ function eraseCanvas(event){
         let targetPixelsRightBottom = pixelsToPosition(adjWidthDiffRight,adjHeightDiffBottom);
         let targetPixels = [targetPixelsLeftTop,targetPixelsRightTop,targetPixelsLeftBottom,targetPixelsRightBottom]
         targetPixels.forEach(p=>{
+          if (p==null) return;
           if (!removingPixels.includes(p)){
             removingPixels.push(p)
           }
@@ -188,7 +206,6 @@ function drawFrame(event){
 cropFrame.addEventListener("mousedown",()=>{
   x_cropDiff = Math.round(event.clientX - cropFrame.getBoundingClientRect().left);
   y_cropDiff = Math.round(event.clientY - cropFrame.getBoundingClientRect().top)
-  console.log(x_cropDiff)
   pictureFrame.addEventListener("mousemove",dragFrame)
 })
 
@@ -214,6 +231,7 @@ function cropCut(){
     alert("请先框出要裁剪的区域");
     return;
   }
+  addHistory()
   imgCanvasSize = imgCanvas.getBoundingClientRect();
   let cropSize = cropFrame.getBoundingClientRect();
   //算出框架与canvas之间的差，调整长宽到初始位置以便找到像素点
@@ -243,10 +261,11 @@ function cropCut(){
 function reset(){
   state.context.clearRect(0,0,state.width,state.height)
   state.context.putImageData(state.originalData,0,0)
-  //let data = state.originalData.data;
   for (let i =0;i<state.originalData.data.length;i++){
     state.currentData.data[i] = state.originalData.data[i]
   }
+  state.history = [];
+  return;
 }
 //实现拖动图片功能
 function drag(event){
@@ -300,10 +319,11 @@ function changeToMode(mode){
   let buttons = [cropButton,eraserButton]
   buttons.forEach(b=>{
     b.classList.remove("stateActiveForBtn");
-    b.nextElementSibling.style.display = "none"
+    b.nextElementSibling.style.height = 0+"px"
   })
   cropFrame.style.display = "none";
   eraserPointer.style.display = "none";
+  pictureFrame.style.cursor = "default";
   //已启动的button再此点击则回到ordinary;
   if (state.mode == mode){
     state.mode = "ordinary"
@@ -320,29 +340,50 @@ function changeToMode(mode){
       imgCanvas.style.cursor = "move"
     }
     cropButton.classList.add("stateActiveForBtn")
-    cropButton.nextElementSibling.style.display = "inline-block"
+    cropButton.nextElementSibling.style.height = "50px"
   }else{
     imgCanvas.onmouseover = ()=>{
-      imgCanvas.style.cursor = "none"
-      eraserPointer.style.display = "inline-block";
+      imgCanvas.style.cursor = "none";
+      eraserPointer.style.display = "inline-block"
+      pictureFrame.style.cursor = "none";
     }
-    imgCanvas.onmousemove = event=>{
+    pictureFrame.onmousemove = event=>{
       pictureFrameSize = pictureFrame.getBoundingClientRect();
-      eraserPointer.style.top = event.clientY - pictureFrameSize.top+ "px"
-      eraserPointer.style.left = event.clientX - pictureFrameSize.left+ "px";
+      eraserPointer.style.top = event.clientY - pictureFrameSize.top   + "px"
+      eraserPointer.style.left = event.clientX - pictureFrameSize.left  + "px";
     }
     eraserButton.classList.add("stateActiveForBtn");
-    eraserButton.nextElementSibling.style.display = "inline-block";
+    eraserButton.nextElementSibling.style.height = "100px";
   }
 }
-
+//改变eraser的大小
 function eraserResize(n){
   eraserControls.forEach(e=>e.classList.remove("eraserActive"));
   eraserControls[n].classList.add("eraserActive")
   eraserPointer.style.width = (n+1)*10 + "px";
   eraserPointer.style.height = (n+1)*10 + "px";
 }
-
+//把更改的图片加入到history中；
+function addHistory(){
+  let tempCanvas = state.context.getImageData(0,0,state.width,state.height)
+  if (state.history.length > 10){
+    state.history.shift()
+  }
+  state.history.push(tempCanvas)
+  return;
+}
+//撤回
+function undo(){
+  if (state.history.length == 0 ) return;
+  for (let i=0;i<state.currentData.data.length;i++){
+    state.currentData.data[i] = state.history[state.history.length-1].data[i]
+  }
+  state.context.clearRect(0,0,state.width,state.height);
+  state.context.putImageData(state.currentData,0,0);
+  state.history = state.history.slice(0,state.history.length-1)
+  return;
+}
+//下载图片
 function downloadImage(){
   let link = document.createElement("a");
   link.setAttribute("href",imgCanvas.toDataURL())
