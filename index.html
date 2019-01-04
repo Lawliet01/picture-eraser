@@ -9,12 +9,11 @@
     <div id="mattingHead-container">
       <div id="pictureFrame">
         <div id="dashFrame">
-          <a id="picInputButton" onclick="picSelector()">点击选择图片</a>
+          <a id="picInputButton" onclick="picSelector()">Click to input image</a>
         </div>
         <canvas id="imgCanvas"></canvas>
         <div id="cropFrame"></div>
         <div id="eraserPointer"></div>
-
       </div><br>
       <div id="toolKit">
            <div id="scaleRangePackage">
@@ -23,15 +22,16 @@
             </div> +
             <span id="scalePrecentage">100%</span>
             </div>
+            <a id="mouseButton" onclick="changeToMode(`ordinary`)">&#9666; mouse</a>
             <div id="cropPackage">
-              <a id="crop" onclick="changeToMode(`crop`)">crop</a>
+              <a id="crop" onclick="changeToMode(`crop`)">&#10697; crop</a>
               <div id="cropTools">
                 <div class="cropButton" onclick="cropCut()">cut</div>
                 <div class="cropButton" onclick="cropFrame.style.display=`none`">cancel</div>
               </div>
             </div>
             <div id="eraserPackage">
-              <a id="eraser" onclick="changeToMode(`eraser`)">eraser</a>
+              <a id="eraser" onclick="changeToMode(`eraser`)">&#10752; eraser</a>
               <div id="eraserTools">
                 <div class="eraserControls" onclick="eraserResize(0)">small</div>
                 <div class="eraserControls" onclick="eraserResize(1)">middle</div>
@@ -39,8 +39,9 @@
                 <div class="eraserControls" onclick="changeToMode(`ordinary`)">done</div>
               </div>
             </div>
-            <a id="resetButton" onclick="reset()">reset</a>
-            <a id="downloadButton" onclick="downloadImage()">download</a>
+            <a id="undoButton" onclick="undo()">&#8629; undo</a>
+            <a id="resetButton" onclick="reset()" title="reset">&#8635; reset</a>
+            <a id="downloadButton" onclick="downloadImage()">&#8595; download</a>
 
       </div>
 
