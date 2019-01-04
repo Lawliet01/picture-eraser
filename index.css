@@ -34,7 +34,7 @@
     background-color: #80EAFF
  }
  #toolKit{
-   display: none;
+   /*display: none;*/
    max-width: 700px;
    margin: auto;
    text-align: left;
@@ -68,18 +68,16 @@
    position: relative;
    display: inline-block;
  }
- #crop,#eraser,#resetButton,#downloadButton{
-   margin-left: 20px;
-   width:40px;
+ #mouseButton,#crop,#eraser,#undoButton,#resetButton,#downloadButton{
+   margin-left: 5px;
    background-color:#0080FF;
    border-radius: 5px;
-   padding: 3px 10px;
+   padding: 3px 8px;
  }
  a{
    color:white;
  }
- #crop:hover,#eraser:hover,#resetButton:hover,
- #downloadButton:hover{
+ #toolKit a:hover{
    cursor: pointer;
    color:#FF66FF;
    background-color: #4DC3FF;
@@ -100,25 +98,28 @@
    border: 3px dashed red;
  }
 #cropTools,#eraserTools{
-  display: none;
   position: absolute;
-  left:23px;
+  height:0;
+  overflow-y: hidden;
+  left:8px;
   top:25px;
   margin-top:-4px;
+  transition: 0.2s;
+  z-index: -1;
 }
 .cropButton,.eraserControls{
   text-align: center;
-  width:49px;
+  width:55px;
   border: 2px solid #FF99FF;
   border-top: none;
   padding-bottom: 3px;
   padding-top: 3px;
-  margin-left: -3px;
   opacity: 0.3;
   font-size: 14px;
+
 }
 .eraserControls{
-  width: 58px;
+  width: 67px;
 }
 .eraserActive{
   opacity: 1;
@@ -136,32 +137,42 @@
   border-radius: 50%;
   width: 10px;
   height: 10px;
-  background-color: white;
+  background-color: #E6EEFF;
   top:50%;
   left:50%
 }
 
-@media screen and (max-width:580px) {
+@media screen and (max-width:710px) {
 
   #scaleRangePackage{
     display: block;
     text-align: center;
   }
-  #buttons{
-    text-align: center;
-  }
 
-  #cropPackage,#eraserPackage,#resetButton,#downloadButton{
+  #cropPackage,#eraserPackage,#resetButton,#downloadButton,#undoButton,#mouseButton{
     display: block;
     margin-top: 15px;
-    float:left
+    float:left;
   }
-  #resetButton,#downloadButton{
+  #toolKit{
+    margin: auto;
+  }
+  #toolKit>a{
     margin-top: 12px;
-    width:50px;
   }
-  #downloadButton{
-    width: 80px;
+
+}
+@media screen and (max-width:480px){
+  #scaleRangePackage,#mouseButton{
+    display: block;
+    margin-top: 15px;
+    float:left;
+  }
+  #mouseButton{
+    margin-left: 20px;
+  }
+  #cropPackage{
+    clear:left;
+    margin-left:-3px;
   }
 }
-
