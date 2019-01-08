@@ -385,8 +385,31 @@ function undo(){
 }
 //下载图片
 function downloadImage(){
+  //把空白部分去除掉
+  let data = state.currentData.data;
+  let firstPixels = null,lastPixels=null,left=state.width,right=0;
+  for (let i=0;i<data.length/4;i++){
+    if (data[i*4+3]==0) continue;
+    if (firstPixels == null) firstPixels = i;
+    lastPixels = i;
+    let pixelsWidth = i%state.width;
+    if (pixelsWidth<left) left = pixelsWidth;
+    if (pixelsWidth>right) right = pixelsWidth;
+  }
+  let top = Math.round(firstPixels/state.width);
+  let bottom = Math.ceil(lastPixels/state.width);
+  let width = right - left;
+  let height = bottom - top;
+  let imageData = state.context.getImageData(left,top,width,height)
+  console.log(imageData)
+  let downloadCanvas = document.createElement("canvas");
+  downloadCanvas.width = width;
+  downloadCanvas.height = height;
+  let downloadCanvasContext = downloadCanvas.getContext("2d");
+  downloadCanvasContext.putImageData(imageData,0,0);
+  //开始下载
   let link = document.createElement("a");
-  link.setAttribute("href",imgCanvas.toDataURL())
+  link.setAttribute("href",downloadCanvas.toDataURL())
   link.setAttribute("download","picture.png")
   link.click();
   link.remove()
