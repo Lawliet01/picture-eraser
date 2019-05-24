@@ -3,7 +3,11 @@
 Picture-Eraser allows users to resize、crop、erase picture.
 It makes user easily to removing and crop any part of a picturer。
 
-## Function:
+## preview
+
+https://lawliet01.github.io/picture-eraser/
+
+## feature:
 1. Picture Input
 2. Picture resize
 3. Picture crop
