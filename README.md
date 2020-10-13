@@ -14,7 +14,7 @@ https://lawliet01.github.io/picture-eraser/
 4. Picture erase
 5. Picture reset
 6. Change undo
-7. Picture download
+7. Picture downloaddd
 
 ## Demo:
 
